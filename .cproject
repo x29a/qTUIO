@@ -136,6 +136,7 @@
 				<pathentry base-path="/usr/include/qt4/" include="QtXml" kind="inc" path="" system="true"/>
 				<pathentry base-path="/usr/include/qt4/" include="QtXmlPatterns" kind="inc" path="" system="true"/>
 			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 		</cconfiguration>
 	</storageModule>
 </cproject>
