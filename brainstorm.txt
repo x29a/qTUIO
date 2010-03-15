@@ -1,0 +1,24 @@
+This file is intended as a place for brainstorming about qTUIO, an implementation of the TUIO protocol for QT
+
+Goals:
+- Make a class/widget/template/... which translates TUIO Events to native QT Multitouch Events
+- modular design so it can be adopted to further versions of TUIO or can be included in QT
+
+How:
+- open source (maybe LGPL license)
+- QT/C++ obviously
+- As platform independant as QT is
+- cmake/qmake?
+
+Contact:
+- Irc: #qt-tuio @ freenode
+- Email:	- 0.x29a.0@googlemail.com
+			-
+			
+			
+Links:
+- TUIO Mainpage about implementations
+	http://www.tuio.org/?software
+- Community around multitouch
+	http://www.nuigroup.com/
+- 
