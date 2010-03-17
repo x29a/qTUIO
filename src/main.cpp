@@ -2,6 +2,7 @@
 
 #include <QtGui>
 #include <QApplication>
+#include <QTouchEvent>
 #include "tuiointerface.h"
 
 int main(int argc, char *argv[])
