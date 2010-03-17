@@ -7,6 +7,7 @@ Goals:
 How:
 - open source (maybe LGPL license)
 - QT/C++ obviously
+- reimplement TUIO client (use QTNetwork class and oscpack directly)? (idea from Ross Bencina)
 - As platform independant as QT is
 - cmake/qmake?
 

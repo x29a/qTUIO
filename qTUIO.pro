@@ -1,5 +1,10 @@
 TEMPLATE = app
 TARGET = qTUIO
+DESTDIR = bin/
+OBJECTS_DIR = build/
+MOC_DIR = build/
+UI_DIR = build/
+RCC_DIR = build/
 QT += core \
     gui \
     xml \
@@ -9,7 +14,8 @@ INCLUDEPATH += include/ \
     src/3rdparty/oscpack \
     src/3rdparty/sdl \
     src/3rdparty/tuio
-HEADERS += include/qtuio.h \
+HEADERS += include/tuiointerface.h \
+    include/qtuio.h \
     src/3rdparty/oscpack/ip/IpEndpointName.h \
     src/3rdparty/oscpack/ip/NetworkingUtils.h \
     src/3rdparty/oscpack/ip/PacketListener.h \
@@ -67,7 +73,19 @@ HEADERS += include/qtuio.h \
     src/3rdparty/tuio/TuioPoint.h \
     src/3rdparty/tuio/TuioServer.h \
     src/3rdparty/tuio/TuioTime.h
-SOURCES += src/main.cpp \
+SOURCES += src/3rdparty/tuio/TuioClient.cpp \ 
+	src/3rdparty/tuio/TuioServer.cpp \
+	src/3rdparty/tuio/TuioTime.cpp \
+	src/3rdparty/oscpack/osc/OscTypes.cpp \
+	src/3rdparty/oscpack/osc/OscOutboundPacketStream.cpp \
+	src/3rdparty/oscpack/osc/OscReceivedElements.cpp \
+	src/3rdparty/oscpack/osc/OscPrintReceivedElements.cpp \
+	src/3rdparty/oscpack/ip/posix/NetworkingUtils.cpp \
+	src/3rdparty/oscpack/ip/posix/UdpSocket.cpp \
+	src/tuiointerface.cpp \
+    src/main.cpp \
     src/qtuio.cpp
-FORMS += qtuio.ui
+FORMS += tuiointerface.ui \
+    qtuio.ui
 RESOURCES += 
+DEFINES += OSC_HOST_LITTLE_ENDIAN
