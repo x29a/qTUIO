@@ -7,6 +7,7 @@
 #include "TuioCursor.h"
 #include "TuioPoint.h"
 
+
 using namespace TUIO;
 
 class TUIOinterface : public TuioListener
@@ -28,7 +29,7 @@ public:
 
 	void start(void);
 
-	TuioClient *client;
+    TuioClient * _client;
 };
 
 #endif // TUIOINTERFACE_H

@@ -1,5 +1,6 @@
 #include "tuiobutton.h"
 
-TUIOButton::TUIOButton()
+TuioButton::TuioButton()
 {
+    setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum);
 }

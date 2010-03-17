@@ -38,11 +38,14 @@
 #include <errno.h>
 #include <string.h> // for memset
 
+#ifndef WIN32
 #include <pthread.h>
 #include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <netdb.h>
+#endif
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>

@@ -1,17 +1,17 @@
-#include "qtuio.h"
-
 #include <QtGui>
-#include <QApplication>
-#include <QTouchEvent>
-#include "tuiointerface.h"
+#include <QCoreApplication>
+#include "tuiothread.h"
+#include "tuiowidget.h"
 
 int main(int argc, char *argv[])
 {
-    /*QApplication a(argc, argv);
-    qTUIO w;
-    w.show();
-    return a.exec();
-    */
-	TUIOinterface iface;
-	iface.start();
+	QApplication a(argc, argv);
+
+    TUIOThread t;
+	t.start();
+
+    TUIOWidget w;
+	w.show();
+
+	return a.exec();
 }

@@ -7,6 +7,10 @@ class TUIOWidget : public QWidget
 {
 public:
     TUIOWidget();
+
+public slots:
+    void buttonTriggered();
+
 };
 
 #endif // TUIOWIDGET_H

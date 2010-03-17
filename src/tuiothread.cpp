@@ -1,19 +1,27 @@
 #include "tuiothread.h"
+#include "tuiointerface.h"
+#include <QDebug>
 
-tuioThread::tuioThread(QObject *parent) :
+TUIOThread::TUIOThread(QObject *parent) :
     QThread(parent)
 {
-	iface = new TUIOinterface()
+    _tuioInterface = new TUIOinterface();
 
 }
 
-tuioThread::~tuioThread()
+TUIOThread::~TUIOThread()
 {
-	delete iface;
+    qDebug() << "Thread dead";
+    delete _tuioInterface;
 }
 
 
-tuioThread::run()
+void TUIOThread::run()
 {
-	iface->start();
+    qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
+    _tuioInterface->start();
+    qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
+
+
+    exec();
 }

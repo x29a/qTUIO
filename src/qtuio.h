@@ -2,7 +2,6 @@
 #define QTUIO_H
 
 #include <QtGui/QWidget>
-#include "ui_qtuio.h"
 
 class qTUIO : public QWidget
 {
@@ -13,7 +12,7 @@ public:
     ~qTUIO();
 
 private:
-    Ui::qTUIOClass ui;
+
 };
 
 #endif // QTUIO_H

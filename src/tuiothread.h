@@ -3,15 +3,14 @@
 
 #include <QThread>
 
-class
-#include "tuiointerface.h"
+class TUIOinterface;
 
-class tuioThread : public QThread
+class TUIOThread : public QThread
 {
 Q_OBJECT
 public:
-    explicit tuioThread(QObject *parent = 0);
-	~tuioThread();
+    explicit TUIOThread(QObject *parent = 0);
+    ~TUIOThread();
 
 
 	void run();
@@ -21,8 +20,8 @@ signals:
 public slots:
 
 
-private
-	TUIOinterface *iface;
+private:
+    TUIOinterface *_tuioInterface;
 
 };
 

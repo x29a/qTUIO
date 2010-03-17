@@ -3,10 +3,10 @@
 
 #include <QPushButton>
 
-class TUIOButton : public QPushButton
+class TuioButton : public QPushButton
 {
 public:
-    TUIOButton();
+    TuioButton();
 };
 
 #endif // TUIOBUTTON_H
