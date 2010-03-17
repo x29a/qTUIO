@@ -7,7 +7,8 @@ class TUIOinterface;
 
 class TUIOThread : public QThread
 {
-Q_OBJECT
+    Q_OBJECT
+
 public:
     explicit TUIOThread(QObject *parent = 0);
     ~TUIOThread();

@@ -5,6 +5,8 @@
 
 class TUIOWidget : public QWidget
 {
+    Q_OBJECT
+
 public:
     TUIOWidget();
 

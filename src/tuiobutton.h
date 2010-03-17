@@ -5,6 +5,8 @@
 
 class TuioButton : public QPushButton
 {
+    Q_OBJECT
+
 public:
     TuioButton(QWidget *parent = 0);
 
