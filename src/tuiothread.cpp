@@ -18,9 +18,9 @@ TUIOThread::~TUIOThread()
 
 void TUIOThread::run()
 {
-    qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
+    //qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
     _tuioInterface->start();
-    qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
+    //qDebug() << (_tuioInterface->_client->isConnected() ? "Yes" : "No" );
 
 
     exec();

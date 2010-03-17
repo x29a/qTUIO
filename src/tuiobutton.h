@@ -6,7 +6,10 @@
 class TuioButton : public QPushButton
 {
 public:
-    TuioButton();
+    TuioButton(QWidget *parent = 0);
+
+public slots:
+    void on_click();
 };
 
 #endif // TUIOBUTTON_H

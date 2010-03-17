@@ -30,6 +30,10 @@ public:
 	void start(void);
 
     TuioClient * _client;
+
+private:
+    int _screenHeight;
+    int _screenWidth;
 };
 
 #endif // TUIOINTERFACE_H
