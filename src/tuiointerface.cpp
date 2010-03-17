@@ -16,6 +16,12 @@ TUIOinterface::TUIOinterface() :
 
 TUIOinterface::~TUIOinterface()
 {
+    if (_client->isConnected())
+    {
+        _client->disconnect();
+    }
+
+    delete _client;
 	// stub
 }
 
