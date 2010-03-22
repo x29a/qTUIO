@@ -2,6 +2,8 @@
 #define TUIOWIDGET_H
 
 #include <QWidget>
+#include <QEvent>
+#include <QDebug>
 
 class TUIOWidget : public QWidget
 {
@@ -12,6 +14,7 @@ public:
 
 public slots:
     void buttonTriggered();
+    bool event(QEvent *event);
 
 };
 

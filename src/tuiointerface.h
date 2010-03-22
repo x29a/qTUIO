@@ -1,6 +1,9 @@
 #ifndef TUIOINTERFACE_H
 #define TUIOINTERFACE_H
 
+#include <QEvent>
+#include <QObject>
+
 #include "TuioListener.h"
 #include "TuioClient.h"
 #include "TuioObject.h"
@@ -29,11 +32,14 @@ public:
 
 	void start(void);
 
+	void setTarget(QObject *target);
+
     TuioClient * _client;
 
 private:
     int _screenHeight;
     int _screenWidth;
+    QObject *target;
 };
 
 #endif // TUIOINTERFACE_H

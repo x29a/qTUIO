@@ -7,10 +7,12 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-    TUIOThread t;
+	TUIOWidget w;
+
+    TUIOThread t(&w);
 	t.start();
 
-    TUIOWidget w;
+
 	w.show();
 
 	return a.exec();

@@ -6,12 +6,20 @@
 #include <QTouchEvent>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QEvent>
+#include <QObject>
+
+void TUIOinterface::setTarget(QObject *target){
+	qDebug() << "before: " << this->target;
+	this->target=target;
+	qDebug() << "after: " << this->target;
+}
 
 
 TUIOinterface::TUIOinterface() :
     TuioListener()
 {
-	// stub
+	this->target = 0;//new QObject;
     int port = 3333;
     _client = new TuioClient(port);
     _client->addTuioListener(this);
@@ -66,6 +74,10 @@ void TUIOinterface::removeTuioObject(TuioObject *tobj)
 */
 void TUIOinterface::addTuioCursor(TuioCursor *tcur)
 {
+	/*
+	QApplication::postEvent(this->target, new QEvent(QEvent::ToolTip));
+	qDebug() << "Touch started";
+	*/
     QTouchEvent *t;
     QList<QTouchEvent::TouchPoint> listTouchPoints;
     QTouchEvent::TouchPoint cursor(tcur->getCursorID());
@@ -81,14 +93,16 @@ void TUIOinterface::addTuioCursor(TuioCursor *tcur)
     t = new QTouchEvent(QEvent::TouchBegin, QTouchEvent::TouchScreen, Qt::NoModifier,
         Qt::TouchPointPressed, listTouchPoints);
 
-    qDebug() << "Touch started";
 
-    qApp->postEvent( qApp->widgetAt(p) , t);
+
+    QApplication::postEvent( this->target , t);
+
     //qDebug() << "add cur " << tcur->getCursorID() << " (" <<  tcur->getSessionID() << ") " << tcur->getX() << " " << tcur->getY();
 }
 
 void TUIOinterface::updateTuioCursor(TuioCursor *tcur)
 {
+
 
     //qDebug() << "set cur " << tcur->getCursorID() << " (" <<  tcur->getSessionID() << ") " << tcur->getX() << " " << tcur->getY()
     //            << " " << tcur->getMotionSpeed() << " " << tcur->getMotionAccel() << " ";
@@ -96,7 +110,7 @@ void TUIOinterface::updateTuioCursor(TuioCursor *tcur)
 
 void TUIOinterface::removeTuioCursor(TuioCursor *tcur)
 {
-	std::cout << "del cur " << tcur->getCursorID() << " (" <<  tcur->getSessionID() << ")" << std::endl;
+	//std::cout << "del cur " << tcur->getCursorID() << " (" <<  tcur->getSessionID() << ")" << std::endl;
 }
 
 void TUIOinterface::refresh(TuioTime frameTime)

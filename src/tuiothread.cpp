@@ -6,6 +6,8 @@ TUIOThread::TUIOThread(QObject *parent) :
     QThread(parent)
 {
     _tuioInterface = new TUIOinterface();
+    qDebug() << "thread: " << parent;
+    _tuioInterface->setTarget(parent);
 
 }
 
@@ -24,4 +26,11 @@ void TUIOThread::run()
 
 
     exec();
+}
+
+bool TUIOThread::event(QEvent *event){
+	if(event->type() == QEvent::ToolTip) {
+		qDebug() << "thread tooltip detected";
+	}
+	return true;
 }

@@ -2,6 +2,7 @@
 #define TUIOTHREAD_H
 
 #include <QThread>
+#include <QEvent>
 
 class TUIOinterface;
 
@@ -23,6 +24,7 @@ public slots:
 
 private:
     TUIOinterface *_tuioInterface;
+    bool event(QEvent *event);
 
 };
 
