@@ -41,7 +41,7 @@
 #ifndef WIN32
 #include <pthread.h>
 #include <unistd.h>
-#endif
+#else
 #include <stdlib.h>
 #include <stdio.h>
 #include <netdb.h>
