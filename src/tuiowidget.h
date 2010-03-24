@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QEvent>
 #include <QDebug>
+#include <QPainter>
 
 class TUIOWidget : public QWidget
 {
@@ -12,9 +13,26 @@ class TUIOWidget : public QWidget
 public:
     TUIOWidget();
 
-public slots:
-    void buttonTriggered();
+    bool createImage();
+
+    void resizeImage(QImage *image, const QSize &newSize);
+
+    int getWidth(void);
+    int getHeight(void);
+
+
+protected:
+    void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
     bool event(QEvent *event);
+
+
+
+private:
+    QList<QColor> myPenColors;
+    QImage image;
+    int wHeight;
+    int wWidth;
 
 };
 

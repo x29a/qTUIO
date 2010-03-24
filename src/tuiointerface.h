@@ -3,6 +3,9 @@
 
 #include <QEvent>
 #include <QObject>
+#include <QDebug>
+#include <QTouchEvent>
+#include <list>
 
 #include "TuioListener.h"
 #include "TuioClient.h"
@@ -29,6 +32,7 @@ public:
 	void removeTuioCursor(TuioCursor *tcur);
 
 	void refresh(TuioTime frameTime);
+	void getPoints(void);
 
 	void start(void);
 
@@ -40,6 +44,8 @@ private:
     int _screenHeight;
     int _screenWidth;
     QObject *target;
+
+    std::list<TuioCursor*> tuioList;
 };
 
 #endif // TUIOINTERFACE_H
