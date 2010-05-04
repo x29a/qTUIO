@@ -1,6 +1,7 @@
-bin/
-build/
-lib/
+bin/*
+build/*
+lib/*
+tmp/
 *.o
 moc_*
 .externalToolBuilders/
