@@ -11,6 +11,13 @@ How:
 - As platform independant as QT is
 - cmake/qmake?
 
+Todo:
+- Documentation
+- check License!!!
+- Test windows/mac
+- pinchzoom/dials not working
+- gestures?
+
 Contact:
 - Irc: #qt-tuio @ freenode
 - Email:	- 0.x29a.0@googlemail.com

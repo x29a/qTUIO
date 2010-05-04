@@ -1,4 +1,41 @@
-Since this project is in its early stages, there is no information to read here
+1. Introduction
+2. Usage
+3. Building the library
+4. Contact
 
 
-you might want to look at the /docs/brainstorm.txt file and feel free to contact us and contribute
+1. Introduction
+qTUIO is a library which implements a TUIO listener on a local UDP socket and forwards the 
+events into the internal eventsystem of Qt. 
+
+
+2. Usage
+- 	build the library (see steps after this chapter)
+- 	put library and header into convinient places (since there is no make install yet you have to manually
+	make the files visible to the system). This could be your application directory, or the systemdirectory
+	for libraries and includes.
+-	Modify you main.cpp to start a qTUIO thread (see examples) which sends the events to a specific
+	target.
+-	build your program while linking against the library. If you use qmake you can also check the examples
+-	run your programm and provide it with TUIO packets
+
+
+3. Building the library
+Linux:
+-	check out the latest version of qTUIO
+	$> git clone git://github.com/x29a/qTUIO.git
+-	change into the src/ directory and generate a Makefile with qmake
+	$> cd qTUIO/src && qmake
+-	make the library
+	$> make
+-	copy the library to a path of your choice and include it in LD_LIBRARY_PATH
+	$> mkdir -p /usr/local/lib/qTUIO
+	$> cp -r ../lib/* /usr/local/lib/qTUIO
+	$> export LD_LIBRARY_PATH="/usr/local/lib/qTUIO:${LD_LIBRARY_PATH}"
+	
+	
+4. Contact
+Please feel free to contact us with any feedback, ideas or problems!
+
+- 	Irc: Channel #qt-tuio on Server irc.freenode.org
+- 	Email:	-x29a: 0.x29a.0@googlemail.com
