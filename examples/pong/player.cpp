@@ -26,7 +26,7 @@
 #include <QDebug>
 
 
-Player::Player(int side) : QGraphicsRectItem(0, 0, PLAYER_SIZE, PLAYER_SIZE*3)
+Player::Player(int side) : QGraphicsRectItem(0, 0, PLAYER_SIZE, PLAYER_SIZE*4)
 {
 	setAcceptTouchEvents(true);
 	this->score = 0;

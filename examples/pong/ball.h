@@ -26,7 +26,7 @@
 #include <QGraphicsEllipseItem>
 
 #define BALL_SIZE 30
-#define BALL_START_SPEED 2
+#define BALL_START_SPEED 2.5
 
 class Ball : public QGraphicsEllipseItem
 {
@@ -40,10 +40,10 @@ public:
 	void setDY(int dy);
 	int getDY(void);
 	void accelerate(void);
-	int getSpeed(void);
+        qreal getSpeed(void);
 	void resetSpeed(void);
 private:
-	int speed;
+        qreal speed;
 	int dx, dy;
 };
 

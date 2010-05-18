@@ -57,8 +57,8 @@ Pong::Pong(int width, int height)
 	this->addItem(this->middleLine);
 
 
-	this->player1->setPos(BORDER, (this->height()/2-PLAYER_SIZE*3/2));
-	this->player2->setPos(this->width()-BORDER-PLAYER_SIZE, (this->height()/2-PLAYER_SIZE*3/2));
+        this->player1->setPos(BORDER, (this->height()/2-PLAYER_SIZE*2));
+        this->player2->setPos(this->width()-BORDER-PLAYER_SIZE, (this->height()/2-PLAYER_SIZE*2));
 	this->ball->setPos(this->width()/2-BALL_SIZE/2, this->height()/2);
 	this->score1->setPos((this->width()/2)-2*BORDER,BORDER);
 	this->score2->setPos((this->width()/2)+2*BORDER,BORDER);
@@ -136,19 +136,24 @@ bool Pong::event(QEvent *event)
 		QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 		foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints)
 		{
-			int yPos = touchPoint.scenePos().y();
+			int yPos = touchPoint.scenePos().y() - 2*PLAYER_SIZE;
 
-			if(yPos > (this->height()-3*PLAYER_SIZE)) yPos = (this->height()-3*PLAYER_SIZE);
-			if(yPos < 0) yPos = 0;
+			if(yPos > (this->height()-4*PLAYER_SIZE))
+				yPos = (this->height()-4*PLAYER_SIZE);
+			if(yPos < 0)
+				yPos = 0;
 
 			// player 1 (left)
-			if((touchPoint.scenePos().x() > 0) && (touchPoint.scenePos().x() <= (this->width()/3)) && !didPlayer1)
+			if((touchPoint.scenePos().x() > 0)
+					&& (touchPoint.scenePos().x() <= (this->width()/3))
+					&& !didPlayer1)
 			{
 				this->player1->setPos(BORDER,yPos);
 				didPlayer1=true;
 			}
 			// pause (middle)
-			else if(touchPoint.scenePos().x() >= (this->width()/3) && (touchPoint.scenePos().x() <= ((this->width()*2)/3)))
+			else if(touchPoint.scenePos().x() >= (this->width()/3)
+					&& (touchPoint.scenePos().x() <= ((this->width()*2)/3)))
 			{
 				if(!this->active_game)
 				{
@@ -157,7 +162,8 @@ bool Pong::event(QEvent *event)
 				}
 			}
 			// player 2 (right)
-			else if((touchPoint.scenePos().x() >= ((this->width()*2)/3)) && !didPlayer2)
+			else if((touchPoint.scenePos().x() >= ((this->width()*2)/3))
+					&& !didPlayer2)
 			{
 				this->player2->setPos(this->width()-BORDER-PLAYER_SIZE, yPos);
 				didPlayer2=true;

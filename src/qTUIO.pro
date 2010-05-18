@@ -5,8 +5,9 @@ TARGET = qTUIO
 # Qt modules required
 QT += core \
     gui \
-    network
-
+    network \
+    xml
+	
 # Small configurations
 CONFIG += precompile_header
 win32:CONFIG += embed_manifest_exe

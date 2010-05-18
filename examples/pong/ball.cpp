@@ -77,10 +77,10 @@ int Ball::getDY(void)
 
 void Ball::accelerate(void)
 {
-	this->speed += 1;
+        this->speed += 0.5;
 }
 
-int Ball::getSpeed(void)
+qreal Ball::getSpeed(void)
 {
 	return this->speed;
 }

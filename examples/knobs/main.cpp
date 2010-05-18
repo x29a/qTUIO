@@ -41,9 +41,12 @@
 
 #include <QApplication>
 #include <QGraphicsView>
+#include <QDesktopWidget>
 
 #include "knob.h"
 #include "qtuio.h"
+
+#include <QtDebug>
 
  int main(int argc, char **argv)
  {
@@ -53,8 +56,9 @@
      QGraphicsView view(&scene);
 
      Knob *knob1 = new Knob;
-     knob1->setPos(-110, 0);
+     knob1->moveBy(-55, 0);
      Knob *knob2 = new Knob;
+     knob2->moveBy(55, 0);
 
      scene.addItem(knob1);
      scene.addItem(knob2);
@@ -62,11 +66,16 @@
      QTuio qTUIO(&view);
      qTUIO.run();
 
-     //view.showFullScreen();
-     view.scale(2.5, 2.5);
-     view.show();
+     view.setRenderHint(QPainter::Antialiasing);
+     view.setCacheMode(QGraphicsView::CacheBackground);
+     //view.setGeometry(QRect(512, 100, 256, 100));
+     view.showFullScreen();
+     //view.scale(2.5, 2.5);
+     //view.show();
      //view.showMaximized();
-     view.fitInView(scene.sceneRect().adjusted(-20, -20, 20, 20), Qt::KeepAspectRatio);
+     scene.setSceneRect(view.rect().adjusted(-view.rect().width()/2, -view.rect().height()/2, -view.rect().width()/2, -view.rect().height()/2));
+     //view.fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+
 
      return app.exec();
  }

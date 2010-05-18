@@ -39,88 +39,73 @@
  **
  ****************************************************************************/
 
- #include "knob.h"
+#include "knob.h"
 
-//#define DEBUG
+#define DEBUG
 
- #include <QBrush>
- #include <QTouchEvent>
-
+#include <QBrush>
+#include <QTouchEvent>
+#include <QGraphicsWidget>
 #ifdef DEBUG
 #include <QtDebug>
 #endif
 
+#include <QGraphicsView>
+
+#define SQRT2 1.4142135623730950488016887
 
 
- Knob::Knob()
-     : QGraphicsEllipseItem(-50, -50, 100, 100)
- {
-     setAcceptTouchEvents(true);
-     setBrush(Qt::lightGray);
+Knob::Knob()
+: QGraphicsEllipseItem(-50, -50, 100, 100)
+{
+	setAcceptTouchEvents(true);
+	setBrush(Qt::lightGray);
 
-     QGraphicsEllipseItem *leftItem = new QGraphicsEllipseItem(0, 0, 20, 20, this);
-     leftItem->setPos(-40, -10);
-     leftItem->setBrush(Qt::darkGreen);
+	QGraphicsEllipseItem *leftItem = new QGraphicsEllipseItem(0, 0, 20, 20, this);
+	leftItem->setPos(-40, -10);
+	leftItem->setBrush(Qt::darkGreen);
 
-     QGraphicsEllipseItem *rightItem = new QGraphicsEllipseItem(0, 0, 20, 20, this);
-     rightItem->setPos(20, -10);
-     rightItem->setBrush(Qt::darkRed);
- }
+	QGraphicsEllipseItem *rightItem = new QGraphicsEllipseItem(0, 0, 20, 20, this);
+	rightItem->setPos(20, -10);
+	rightItem->setBrush(Qt::darkRed);
+}
 
- bool Knob::sceneEvent(QEvent *event)
- {
-#ifdef DEBUG
-     QString typ;
-     switch (event->type()) {
-     case QEvent::TouchBegin: {
-             typ = "TouchBegin ";
-             typ += QString::number(static_cast<QTouchEvent *>(event)->touchPoints().first().id());
-             break;
-         }
-     case QEvent::TouchUpdate: {
-             typ = "TouchUpdate ";
-             typ += QString::number(static_cast<QTouchEvent *>(event)->touchPoints().first().id());
-             break;
-         }
-     case QEvent::TouchEnd: {
-             typ = "TouchEnd ";
-             typ += QString::number(static_cast<QTouchEvent *>(event)->touchPoints().first().id());
-             break;
-         }
-     default: {
-             typ = "Non-TouchEvent";
-         }
-     }
-#endif
-     switch (event->type()) {
-     case QEvent::TouchBegin:
-     case QEvent::TouchUpdate:
-     case QEvent::TouchEnd:
-     {
-
-         QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
-#ifdef DEBUG
-         qDebug() << "!!! Touch Event received !!! " << typ;
-         qDebug() << "First ID: " << touchEvent->touchPoints().first().id() << " , first SCENEPOS: " << touchEvent->touchPoints().first().scenePos() << " , first POS: " << touchEvent->touchPoints().first().pos();
-         qDebug() << "Last ID: " << touchEvent->touchPoints().last().id() << " , last SCENEPOS: " << touchEvent->touchPoints().last().scenePos() << " , last POS: " << touchEvent->touchPoints().last().pos();
-#endif
-
-         if (touchEvent->touchPoints().count() == 2) {
-             const QTouchEvent::TouchPoint &touchPoint1 = touchEvent->touchPoints().first();
-             const QTouchEvent::TouchPoint &touchPoint2 = touchEvent->touchPoints().last();
-
-             QLineF line1(touchPoint1.lastScenePos(), touchPoint2.lastScenePos());
-             QLineF line2(touchPoint1.scenePos(), touchPoint2.scenePos());
-
-             rotate(line2.angleTo(line1));
-         }
-
-         break;
-     }
-
-     default:
-         return QGraphicsItem::sceneEvent(event);
-     }
-
-     return true;
- }
+bool Knob::sceneEvent(QEvent *event)
+{
+	switch (event->type()) {
+	case QEvent::TouchBegin:
+	case QEvent::TouchUpdate:
+	case QEvent::TouchEnd:
+	{
+		qDebug() << "touchevent received";
+		QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
+		const QTouchEvent::TouchPoint &touchPoint1 = touchEvent->touchPoints().first();
+		const QTouchEvent::TouchPoint &touchPoint2 = touchEvent->touchPoints().last();
+		if (QLineF(touchPoint2.screenPos(), touchPoint2.lastScreenPos()).length() >= SQRT2)
+			if (touchEvent->touchPoints().length() == 2) { // scale & rotate
+				QLineF line1(touchPoint1.lastScenePos(), touchPoint2.lastScenePos());
+				QLineF line2(touchPoint1.scenePos(), touchPoint2.scenePos());
+				qreal r = line2.angleTo(line1);
+				while (r + this->rotation() > 180)
+					r -= 360;
+				while (r + this->rotation() < -180)
+					r += 360;
+				this->setRotation(this->rotation() + r);
+				qreal s = (line2.length()+80)/(line1.length()+80) - 1.0;
+				if (this->scale() + s >= 0.75 && this->scale() + s <= 3)
+					this->setScale(this->scale() + s);
+				QPointF d = touchPoint2.scenePos() - touchPoint1.scenePos();
+				this->setPos(touchPoint2.scenePos()-d/2);
+			} else if (touchEvent->touchPoints().length() == 1) { // move
+				QPointF d = touchPoint2.scenePos() - touchPoint2.lastScenePos();
+				if (this->scene()->sceneRect().contains(this->pos()+d))
+					this->setPos(this->pos() + d);
+			}
+		break;
+	}
+	default:
+		return QGraphicsItem::sceneEvent(event);
+	}
+	//     qDebug() << this->pos() << "\tScale: " << this->scale() << "\tRotation: " << this->rotation();
+	return true;
+}

@@ -39,44 +39,44 @@
  **
  ****************************************************************************/
 
- #ifndef SCRIBBLEAREA_H
- #define SCRIBBLEAREA_H
+#ifndef SCRIBBLEAREA_H
+#define SCRIBBLEAREA_H
 
- // defines the size of the paintbrush. Default: 30
- #define TOUCH_SIZE 5
+// defines the size of the paintbrush. Default: 30
+#define TOUCH_SIZE 5
 
- #include <QColor>
- #include <QImage>
- #include <QPoint>
- #include <QWidget>
+#include <QColor>
+#include <QImage>
+#include <QPoint>
+#include <QWidget>
 
- class ScribbleArea : public QWidget
- {
-     Q_OBJECT
+class ScribbleArea : public QWidget
+{
+	Q_OBJECT
 
- public:
-     ScribbleArea(QWidget *parent = 0);
+public:
+	ScribbleArea(QWidget *parent = 0);
 
-     bool openImage(const QString &fileName);
-     bool saveImage(const QString &fileName, const char *fileFormat);
+	bool openImage(const QString &fileName);
+	bool saveImage(const QString &fileName, const char *fileFormat);
 
-     bool isModified() const { return modified; }
+	bool isModified() const { return modified; }
 
- public slots:
-     void clearImage();
-     void print();
+public slots:
+void clearImage();
+void print();
 
- protected:
-     void paintEvent(QPaintEvent *event);
-     void resizeEvent(QResizeEvent *event);
-     bool event(QEvent *event);
+protected:
+void paintEvent(QPaintEvent *event);
+void resizeEvent(QResizeEvent *event);
+bool event(QEvent *event);
 
- private:
-     void resizeImage(QImage *image, const QSize &newSize);
+private:
+void resizeImage(QImage *image, const QSize &newSize);
 
-     bool modified;
-     QList<QColor> myPenColors;
-     QImage image;
- };
+bool modified;
+QList<QColor> myPenColors;
+QImage image;
+};
 
- #endif
+#endif
