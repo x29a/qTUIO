@@ -1,6 +1,6 @@
 unix {
-LIBS += -L../../lib -lqTUIO
-INCLUDEPATH += ../
+LIBS += -L../lib -lqTUIO
+INCLUDEPATH += ../src
 }
 win32:LIBS += -lqTUIO
 
