@@ -162,7 +162,6 @@
              default:
                  {
                      QRectF rect = touchPoint.rect();
-                     qDebug() << "rect: " << touchPoint.rect();
                      if (rect.isEmpty()) {
 
                          qreal diameter = qreal(30) * touchPoint.pressure();
