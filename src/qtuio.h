@@ -62,6 +62,14 @@ private:
     QRect screenRect;
     TUIO::TuioClient *tuioClient;
     QMap<int, QTouchEvent::TouchPoint> *qTouchPointMap;
+
+
+    /*!
+     * 	\brief Internal function to handle TUIO events and send QTouchEvent
+	 *	\param tcur TUIO::TuioCursor pointer to current point delivered by tuio client
+	 *	\param eventType QEvent::Type switch to decide which type of point (new, updated, delete) got passed
+	 *	\return The test results
+     */
     bool tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType);
     bool running;
 };
