@@ -1,10 +1,10 @@
 /*
-	qTUIO - TUIO Interface for Qt
+    qTUIO - TUIO Interface for Qt
 
-	Original Version by Martin Blankenburg <martin.blankenburg@imis.uni-luebeck.de>
-	Integrated into qTUIO by x29a <0.x29a.0@gmail.com>
+    Original Version by Martin Blankenburg <martin.blankenburg@imis.uni-luebeck.de>
+    Integrated into qTUIO by x29a <0.x29a.0@gmail.com>
 
-	This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -35,13 +35,12 @@
 #include "TuioClient.h"
 #include "TuioCursor.h"
 
-#ifdef WIN32
-#define OFFSETX 5
-#define OFFSETY 35
-#else
-#define OFFSETX 0
-#define OFFSETY 0
-#endif
+#include <QDomDocument>
+#include <QDomElement>
+#include <QTextStream>
+#include <QProcessEnvironment>
+
+QPoint offset(0, 0);
 
 QTuio::QTuio(QObject *parent)
 {
@@ -65,6 +64,35 @@ QTuio::~QTuio()
 }
 
 
+int QTuio::processConfig(QFile *file)
+{
+    QDomDocument doc("qTUIOconfig");
+    if (!doc.setContent(file))
+        return -1;
+    QDomElement root = doc.documentElement();
+    if (root.tagName() != "CONFIG")
+        return -2;
+    if (root.attribute("CONFIGURED", "") != "TRUE") {
+        qDebug() << "qTUIO not yet configured, using default values";
+        return -3;
+    } else {
+        QDomNode n = root.firstChild();
+        while (!n.isNull()) {
+          QDomElement e = n.toElement();
+          if (!e.isNull()) {
+            if (e.tagName() == "OFFSET") {
+                offset.setX(e.attribute("X", "0").toInt());
+                offset.setY(e.attribute("Y", "0").toInt());
+            }
+          }
+          n = n.nextSibling();
+        }
+    }
+    return 0;
+}
+
+
+
 void QTuio::run()
 {
     running = true;
@@ -73,6 +101,15 @@ void QTuio::run()
     tuioClient->addTuioListener(this);
     tuioClient->connect();
     qTouchPointMap = new QMap<int, QTouchEvent::TouchPoint>();
+
+    QString home = QProcessEnvironment::systemEnvironment().value("HOME");
+    QFile file(home.append("/.qtuioconfig"));
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTuio::processConfig(&file);
+        file.close();
+    } else {
+        qDebug() << "Configuration file not found, using default values";
+    }
 }
 
 
@@ -85,20 +122,21 @@ void QTuio::removeTuioObject(TUIO::TuioObject *tobj) {}
 
 bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
 {
-    const QPointF normPos(tcur->getX(), tcur->getY());
-    const QPointF screenPos(screenRect.width() * normPos.x() - OFFSETX, screenRect.height() * normPos.y() - OFFSETY);
-
     QTouchEvent::TouchPoint touchPoint(tcur->getSessionID());
 
-    touchPoint.setNormalizedPos(normPos);
+    const QPointF normPos(tcur->getX(), tcur->getY());
+    const QPointF screenPos(screenRect.width() * normPos.x() - offset.x(), screenRect.height() * normPos.y() - offset.y());
+
     touchPoint.setRect(QRectF());
+    touchPoint.setNormalizedPos(normPos);
 
     touchPoint.setPressure(1.0);
-    touchPoint.setScreenRect(screenRect);
+    touchPoint.setScreenRect(QRectF());
     touchPoint.setScreenPos(screenPos);
 
+    touchPoint.setSceneRect(QRectF());
+
     if (theScene) {
-        touchPoint.setSceneRect(theScene->sceneRect());
         if (theView) {
             const QPoint pos((int)screenPos.x() - theView->geometry().x(),
                              (int)screenPos.y() - theView->geometry().y());
@@ -118,13 +156,13 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
         const QPoint pos((int)screenPos.x() - theMainWindow->geometry().x(),
                          (int)screenPos.y() - theMainWindow->geometry().y());
         touchPoint.setPos(pos);
-        touchPoint.setSceneRect(QRectF());
         touchPoint.setScenePos(pos);
     }
 
     switch (eventType) {
     case QEvent::TouchBegin: {
             touchPoint.setState(Qt::TouchPointPressed);
+
             touchPoint.setStartNormalizedPos(normPos);
             touchPoint.setStartPos(touchPoint.pos());
             touchPoint.setStartScreenPos(screenPos);
@@ -139,7 +177,7 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
             break;
         }
     case QEvent::TouchUpdate: {
-            if (tcur->getMotionSpeed() > 0)
+            if (tcur->getMotionSpeed() > 0 && tcur->getMotionAccel() > 0)
                 touchPoint.setState(Qt::TouchPointMoved);
             else
                 touchPoint.setState(Qt::TouchPointStationary);
@@ -164,11 +202,38 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
     default: {}
     }
 
-    QEvent *touchEvent = new QTouchEvent(eventType, QTouchEvent::TouchScreen, Qt::NoModifier, 0, qTouchPointMap->values());
+    QList<QTouchEvent::TouchPoint> touchPointList;
+    if (theScene) {
+        QGraphicsItem *tpItem;
+        QGraphicsItem *touchPointItem;
+        foreach (QTouchEvent::TouchPoint tp, qTouchPointMap->values()) {
+            tpItem = theScene->itemAt(tp.scenePos());
+            touchPointItem = theScene->itemAt(touchPoint.scenePos());
+            if (tp.id() != touchPoint.id() && tpItem && touchPointItem && tpItem == touchPointItem) {
+                touchPointList.append(tp);
+            }
+        }
+    }
+    else {
+        QWidget *tpWidget;
+        QWidget *touchPointWidget;
+        foreach (QTouchEvent::TouchPoint tp, qTouchPointMap->values()) {
+            tpWidget = theMainWindow->childAt(tp.scenePos().x(), tp.scenePos().y());
+            touchPointWidget = theMainWindow->childAt(touchPoint.scenePos().x(), touchPoint.scenePos().y());
+            if (tp.id() != touchPoint.id() && tpWidget && touchPointWidget && tpWidget == touchPointWidget) {
+                touchPointList.append(tp);
+            }
+        }
+    }
+    touchPointList.append(touchPoint);
+
+    QEvent::Type touchEventType = eventType;
+    if (touchPointList.length() != 1)
+        touchEventType = QEvent::TouchUpdate;
+
+    QEvent *touchEvent = new QTouchEvent(touchEventType, QTouchEvent::TouchScreen, Qt::NoModifier, 0, QList<QTouchEvent::TouchPoint>()<<touchPointList);
     if (theScene)
         qApp->postEvent(theScene, touchEvent);
-    else if (theView)
-        qApp->postEvent(theView->scene(), touchEvent);
     else
         qApp->postEvent(theMainWindow->centralWidget(), touchEvent);
 
@@ -181,17 +246,17 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
 
 void QTuio::addTuioCursor(TUIO::TuioCursor *tcur)
 {
-	QTuio::tuioToQt(tcur, QEvent::TouchBegin);
+    QTuio::tuioToQt(tcur, QEvent::TouchBegin);
 }
 
 void QTuio::updateTuioCursor(TUIO::TuioCursor *tcur)
 {
-	QTuio::tuioToQt(tcur, QEvent::TouchUpdate);
+    QTuio::tuioToQt(tcur, QEvent::TouchUpdate);
 }
 
 void QTuio::removeTuioCursor(TUIO::TuioCursor *tcur)
 {
-	QTuio::tuioToQt(tcur, QEvent::TouchEnd);
+    QTuio::tuioToQt(tcur, QEvent::TouchEnd);
 }
 
 
