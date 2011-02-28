@@ -165,12 +165,29 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
     }
 
     QEvent *touchEvent = new QTouchEvent(eventType, QTouchEvent::TouchScreen, Qt::NoModifier, 0, qTouchPointMap->values());
-    if (theScene)
+
+/**********************************************************
+ * Old Code doesn't work with QGraphicsView
+ * it doesn't send events to the viewport
+ * and which make the pinchzoom example doesn't work
+***********************************************************/
+/*    if (theScene)
         qApp->postEvent(theScene, touchEvent);
     else if (theView)
         qApp->postEvent(theView->scene(), touchEvent);
     else
+        qApp->postEvent(theMainWindow->centralWidget(), touchEvent);*/
+
+/************************************************
+ * New code fixing the issue with QGraphicsViw
+*************************************************/
+    if (theView->viewport())
+        qApp->postEvent(theView->viewport(), touchEvent);
+    else if (theScene)
+        qApp->postEvent(theScene, touchEvent);
+    else
         qApp->postEvent(theMainWindow->centralWidget(), touchEvent);
+
 
     if (eventType == QEvent::TouchEnd)
         qTouchPointMap->remove(tcur->getSessionID());
