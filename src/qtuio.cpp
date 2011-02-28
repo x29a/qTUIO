@@ -122,8 +122,12 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
         touchPoint.setScenePos(pos);
     }
 
+    Qt::TouchPointStates touchPointStates;
+
     switch (eventType) {
     case QEvent::TouchBegin: {
+	    touchPointStates = Qt::TouchPointPressed;
+
             touchPoint.setState(Qt::TouchPointPressed);
             touchPoint.setStartNormalizedPos(normPos);
             touchPoint.setStartPos(touchPoint.pos());
@@ -140,9 +144,17 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
         }
     case QEvent::TouchUpdate: {
             if (tcur->getMotionSpeed() > 0)
+	    {
+                touchPointStates = Qt::TouchPointMoved;
+
                 touchPoint.setState(Qt::TouchPointMoved);
+	    }
             else
+	    {
+                touchPointStates = Qt::TouchPointStationary;
+
                 touchPoint.setState(Qt::TouchPointStationary);
+	    }
 
             touchPoint.setLastNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).normalizedPos());
             touchPoint.setLastPos(qTouchPointMap->value(tcur->getSessionID()).pos());
@@ -153,18 +165,22 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
             break;
         }
     case QEvent::TouchEnd: {
+            touchPointStates = Qt::TouchPointReleased;
+
             touchPoint.setState(Qt::TouchPointReleased);
 
             touchPoint.setLastNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).normalizedPos());
             touchPoint.setLastPos(qTouchPointMap->value(tcur->getSessionID()).pos());
             touchPoint.setLastScreenPos(qTouchPointMap->value(tcur->getSessionID()).screenPos());
             touchPoint.setLastScenePos(qTouchPointMap->value(tcur->getSessionID()).scenePos());
+
+            qTouchPointMap->insert(tcur->getSessionID(), touchPoint);
             break;
         }
     default: {}
     }
 
-    QEvent *touchEvent = new QTouchEvent(eventType, QTouchEvent::TouchScreen, Qt::NoModifier, 0, qTouchPointMap->values());
+    QEvent *touchEvent = new QTouchEvent(eventType, QTouchEvent::TouchScreen, Qt::NoModifier, touchPointStates, qTouchPointMap->values());
 
 /**********************************************************
  * Old Code doesn't work with QGraphicsView
