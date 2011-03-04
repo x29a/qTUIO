@@ -15,7 +15,7 @@ Todo:
 - Documentation
 - check License!!!
 - Test windows/mac
-- pinchzoom/dials not working
+- dials not working
 - gestures?
 
 Contact:

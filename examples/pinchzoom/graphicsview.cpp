@@ -56,7 +56,6 @@
 
  bool GraphicsView::viewportEvent(QEvent *event)
  {
-	 qDebug() << "touch type: " << event->type();
      switch (event->type()) {
      case QEvent::TouchBegin:
      case QEvent::TouchUpdate:
