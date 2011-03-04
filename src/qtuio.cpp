@@ -156,6 +156,11 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
                 touchPoint.setState(Qt::TouchPointStationary);
 	    }
 
+            touchPoint.setStartNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).startNormalizedPos());
+            touchPoint.setStartPos(qTouchPointMap->value(tcur->getSessionID()).startPos());
+            touchPoint.setStartScreenPos(qTouchPointMap->value(tcur->getSessionID()).startScreenPos());
+            touchPoint.setStartScenePos(qTouchPointMap->value(tcur->getSessionID()).startScenePos());
+
             touchPoint.setLastNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).normalizedPos());
             touchPoint.setLastPos(qTouchPointMap->value(tcur->getSessionID()).pos());
             touchPoint.setLastScreenPos(qTouchPointMap->value(tcur->getSessionID()).screenPos());
@@ -168,6 +173,11 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
             touchPointStates = Qt::TouchPointReleased;
 
             touchPoint.setState(Qt::TouchPointReleased);
+
+            touchPoint.setStartNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).startNormalizedPos());
+            touchPoint.setStartPos(qTouchPointMap->value(tcur->getSessionID()).startPos());
+            touchPoint.setStartScreenPos(qTouchPointMap->value(tcur->getSessionID()).startScreenPos());
+            touchPoint.setStartScenePos(qTouchPointMap->value(tcur->getSessionID()).startScenePos());
 
             touchPoint.setLastNormalizedPos(qTouchPointMap->value(tcur->getSessionID()).normalizedPos());
             touchPoint.setLastPos(qTouchPointMap->value(tcur->getSessionID()).pos());
