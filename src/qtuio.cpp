@@ -207,7 +207,7 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
 /************************************************
  * New code fixing the issue with QGraphicsViw
 *************************************************/
-    if (theView->viewport())
+    if (theView)
         qApp->postEvent(theView->viewport(), touchEvent);
     else if (theScene)
         qApp->postEvent(theScene, touchEvent);
