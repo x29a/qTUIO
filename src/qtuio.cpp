@@ -69,7 +69,8 @@ void QTuio::run()
 {
     running = true;
     screenRect = QApplication::desktop()->rect();
-    tuioClient = new TUIO::TuioClient::TuioClient(3333);
+//    tuioClient = new TUIO::TuioClient::TuioClient(3333);
+    tuioClient = new TUIO::TuioClient(3333);
     tuioClient->addTuioListener(this);
     tuioClient->connect();
     qTouchPointMap = new QMap<int, QTouchEvent::TouchPoint>();
@@ -207,7 +208,8 @@ bool QTuio::tuioToQt(TUIO::TuioCursor *tcur, QEvent::Type eventType)
 /************************************************
  * New code fixing the issue with QGraphicsViw
 *************************************************/
-    if (theView->viewport())
+
+	 if (theView && theView->viewport())
         qApp->postEvent(theView->viewport(), touchEvent);
     else if (theScene)
         qApp->postEvent(theScene, touchEvent);
